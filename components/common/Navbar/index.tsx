@@ -1,5 +1,6 @@
 "use client";
 
+import { SiTestrail } from "react-icons/si";
 import { ThemeBtn } from "../ThemeBtn";
 import { Input } from "@/components/ui/input";
 
@@ -7,6 +8,7 @@ const Navbar = () => {
   return (
     <div className="w-full mx-auto flex flex-col md:flex-row ">
       <div className="w-full flex items-center py-2 md:py-4 justify-center md:justify-normal">
+        <SiTestrail className="text-xl text-slate-400 hover:text-black mr-1" />
         <p className="lg:text-xl text-slate-400 text-center font-semibold font-mono">
           rute-krl
         </p>
