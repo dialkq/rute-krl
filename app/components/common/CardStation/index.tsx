@@ -2,7 +2,7 @@ import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 import CardRute from "../CardRute";
 const CardStation = () => {
   return (
-    <div className="w-full flex flex-col justify-between">
+    <div className="w-full flex flex-col justify-between mt-5 mb-10 md:mt-5 md:mb-16">
       {/* STATION TITLE */}
       <div className="flex justify-between w-full">
         <div className="flex flex-col">
