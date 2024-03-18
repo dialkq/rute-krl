@@ -1,6 +1,5 @@
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 import CardRute from "../CardRute";
-import CardSchedule from "../CardSchedule";
 const CardStation = () => {
   return (
     <div className="w-full flex flex-col justify-between">
@@ -15,8 +14,6 @@ const CardStation = () => {
 
       {/* RUTE DAN JADWAL */}
       <div className="flex mt-3">
-        <div className="w-1 bg-emerald-500"></div>
-        {/* RUTE  */}
         <div className="w-full">
           <CardRute />
           <CardRute />

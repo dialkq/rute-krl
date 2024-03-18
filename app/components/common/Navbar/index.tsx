@@ -2,7 +2,7 @@
 
 import { SiTestrail } from "react-icons/si";
 import { ThemeBtn } from "../ThemeBtn";
-import { Input } from "@/components/ui/input";
+import { Input } from "../../ui/input";
 
 const Navbar = () => {
   return (

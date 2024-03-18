@@ -1,9 +1,9 @@
-import CardStation from "@/components/common/CardStation";
-import Navbar from "../components/common/Navbar";
+import Navbar from "./components/common/Navbar";
+import CardStation from "./components/common/CardStation";
 
 export default function Home() {
   return (
-    <div>
+    <div className="">
       <div className="w-11/12 md:w-4/6 lg:w-5/12 mx-auto">
         <Navbar />
       </div>
