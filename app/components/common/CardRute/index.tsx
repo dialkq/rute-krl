@@ -41,7 +41,6 @@ const CardRute = () => {
         </p>
         <div className="grid grid-cols-3 gap-4 pl-3">
           <CardNextSchedule />
-          <CardNextSchedule />
         </div>
       </div>
 
