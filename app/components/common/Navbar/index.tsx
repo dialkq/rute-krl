@@ -2,7 +2,7 @@
 
 import { SiTestrail } from "react-icons/si";
 import { ThemeBtn } from "../ThemeBtn";
-import { Input } from "../../ui/input";
+import InputSearch from "../InputSearch";
 
 const Navbar = () => {
   return (
@@ -19,10 +19,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <Input
-          placeholder="Cari Stasiun"
-          className="placeholder:text-slate-400 md:mr-3 rounded-lg font-mono border-2 border-slate-200 focus:border-none w-full md:w-52 lg:w-60"
-        />
+        <InputSearch />
         <div className="hidden md:flex">
           <ThemeBtn />
         </div>
