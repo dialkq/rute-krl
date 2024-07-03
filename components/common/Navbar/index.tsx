@@ -1,9 +1,11 @@
-const Navbar = () => {
-    return (
-        <div>
-            <p>teks</p>
-        </div>
-    )
-}
+import { DarkTheme } from "../DarkMode";
 
-export default Navbar
+const Navbar = () => {
+  return (
+    <div className="">
+      <DarkTheme />
+    </div>
+  );
+};
+
+export default Navbar;
