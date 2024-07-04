@@ -4,8 +4,8 @@ import Navbar from "@/components/common/Navbar";
 
 export default function Home() {
   return (
-    <div className="w-full lg:w-1/2 mx-auto">
-      <div className="my-3">
+    <div className="w-11/12 md:w-3/5 lg:w-1/2 mx-auto">
+      <div className="">
         <Navbar />
       </div>
     </div>
