@@ -14,9 +14,6 @@ const Navbar = () => {
           <p className="lg:text-xl text-foreground/40 cursor-pointer text-center font-semibold font-mono group-hover:text-foreground/90">
             rute-krl
           </p>
-          <p className="lg:text-xl text-foreground/40 cursor-pointer text-center font-semibold font-mono group-hover:text-foreground/90">
-            rute-krl
-          </p>
         </div>
         <div className="grid grid-cols-2 gap-0 md:gap-1">
           {/* TAMBAHKAN STASIUN */}
