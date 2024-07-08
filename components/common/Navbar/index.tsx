@@ -1,3 +1,4 @@
+"use client";
 import { DarkTheme } from "../DarkMode";
 import { SiTestrail } from "react-icons/si";
 import { AddStation } from "../AddStation";

@@ -1,9 +1,13 @@
+"use client";
+
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import Select, { ActionMeta, SingleValue } from "react-select";
+import Select from "react-select";
 import { IoMdAdd } from "react-icons/io";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/app/state/store";
+import { fetchStations, selectStation } from "@/app/state/Reducer/stationSlice";
+import { useEffect } from "react";
 
 // STYLE SELECT OPTION
 const customStyles = {
@@ -29,37 +33,32 @@ const customStyles = {
   }),
 };
 
-type Station = {
-  id: string;
-  name: string;
-};
-
 export function AddStation() {
-  const [stations, setStations] = useState<Station[]>([]);
-  const [selectedStation, setSelectedStation] = useState<{ value: string; label: string } | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const stations = useSelector((state: RootState) => state.stations.stations);
+  const selectedStation = useSelector((state: RootState) => state.stations.selectedStation);
+
+  // console debug
+  useEffect(() => {
+    console.log('Selected station:', selectedStation);
+  }, [selectedStation]);
 
   useEffect(() => {
-    const fetchStations = async () => {
-      try {
-        const response = await axios.get("/api/v1/station");
-        const fetchedStations: Station[] = response.data.data;
+    dispatch(fetchStations());
+  }, [dispatch]);
 
-        setStations(fetchedStations);
-      } catch (error) {
-        console.error("Error fetching stations:", error);
-      }
-    };
+  // maping options for select
+  const stationOptions = stations.map((station: any) => ({
+    value: station.id,
+    label: station.name,
+  }));
 
-    fetchStations();
-  }, []);
-  
-  // console state
-  // const handleStationChange = (newValue: SingleValue<{ value: string; label: string }>, actionMeta: ActionMeta<{ value: string; label: string }>) => {
-  //   if (newValue) {
-  //     setSelectedStation(newValue);
-  //     console.log('Selected station label:', newValue.label);
-  //   }
-  // };
+  const handleChange = (option: any) => {
+    const selected = stations.find((station: any) => station.id === option.value);
+    console.log('Selected option:', selected);
+    dispatch(selectStation(selected || null));
+  };
+
 
   return (
     <Dialog>
@@ -70,13 +69,14 @@ export function AddStation() {
         <DialogDescription>Pilih Stasiun</DialogDescription>
         <Select
           styles={customStyles}
-          options={stations.map((station) => ({
-            value: station.id,
-            label: station.name,
-          }))}
+          options={stationOptions}
+          onChange={handleChange}
+          value={
+            selectedStation
+              ? { value: selectedStation.id, label: selectedStation.name }
+              : null
+          }
           className="my-1 text-foreground/80 font-bold"
-          value={selectedStation}
-          // onChange={handleStationChange}
         />
       </DialogContent>
     </Dialog>
