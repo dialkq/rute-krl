@@ -14,7 +14,7 @@ const Navbar = () => {
             rute-krl
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-0 md:gap-1">
+        <div className="grid grid-cols-2 gap-3 md:gap-4">
           {/* TAMBAHKAN STASIUN */}
           <AddStation />
           {/* BUTTON CHANGE THEME */}

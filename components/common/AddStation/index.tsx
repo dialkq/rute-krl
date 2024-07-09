@@ -38,21 +38,17 @@ export function AddStation() {
   const stations = useSelector((state: RootState) => state.stations.stations);
   const selectedStation = useSelector((state: RootState) => state.stations.selectedStation);
 
-  // console debug
-  useEffect(() => {
-    console.log('Selected station:', selectedStation);
-  }, [selectedStation]);
-
   useEffect(() => {
     dispatch(fetchStations());
   }, [dispatch]);
 
-  // maping options for select
+  // MAPING OPTIONS FOR SELECT
   const stationOptions = stations.map((station: any) => ({
     value: station.id,
     label: station.name,
   }));
 
+  // HANDLE SELECTED OPTION FOR STATE
   const handleChange = (option: any) => {
     const selected = stations.find((station: any) => station.id === option.value);
     console.log('Selected option:', selected);
@@ -65,7 +61,7 @@ export function AddStation() {
       <DialogTrigger asChild>
         <IoMdAdd className="w-5 h-5 font-bold text-foreground/40 my-auto cursor-pointer hover:text-foreground/90" />
       </DialogTrigger>
-      <DialogContent className="w-11/12 md:w-full dark:bg-black rounded-lg">
+      <DialogContent className="w-11/12 md:w-full dark:bg-black rounded-lg fixed left-[50%] top-[20%]">
         <DialogDescription>Pilih Stasiun</DialogDescription>
         <Select
           styles={customStyles}
