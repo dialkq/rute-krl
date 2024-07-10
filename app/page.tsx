@@ -4,6 +4,7 @@ import Navbar from "@/components/common/Navbar";
 import CardStation from "@/components/common/CardStation";
 import { Provider } from "react-redux";
 import { store } from "./state/store";
+import CardStation2 from "@/components/common/CardStation2";
 
 export default function Home() {
   return (
@@ -13,7 +14,8 @@ export default function Home() {
           <Navbar />
         </div>
         <div className="my-5 md:my-6 lg:my-7 ">
-          <CardStation />
+          {/* <CardStation /> */}
+          <CardStation2 />
         </div>
       </div>
     </Provider>

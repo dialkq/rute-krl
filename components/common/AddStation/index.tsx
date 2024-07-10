@@ -1,5 +1,5 @@
 "use client";
-
+//batas undo
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Select from "react-select";
 import { IoMdAdd } from "react-icons/io";
@@ -51,7 +51,6 @@ export function AddStation() {
   // HANDLE SELECTED OPTION FOR STATE
   const handleChange = (option: any) => {
     const selected = stations.find((station: any) => station.id === option.value);
-    console.log('Selected option:', selected);
     dispatch(selectStation(selected || null));
   };
 

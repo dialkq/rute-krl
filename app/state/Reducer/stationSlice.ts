@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+// BATAS UNDO
 interface Station {
   id: string;
   name: string;
@@ -22,12 +23,14 @@ interface StationState {
   stations: Station[];
   selectedStation: Station | null;
   schedule: Schedule[];
+  filterScheduleData: { destination: string; color: string }[];
 }
 
 const initialState: StationState = {
   stations: [],
   selectedStation: null,
   schedule: [],
+  filterScheduleData: [],
 };
 
 // FETCHING STATIONS
@@ -42,17 +45,12 @@ export const fetchSchedule = createAsyncThunk('stations/fetchSchedule', async (s
   return response.data.data;
 });
 
-
 const stationSlice = createSlice({
   name: 'stations',
   initialState,
   reducers: {
     selectStation: (state, action: PayloadAction<Station | null>) => {
       state.selectedStation = action.payload;
-      if (action.payload) {
-        // Trigger fetchSchedule when station is selected
-        fetchSchedule(action.payload.id);
-      }
     },
   },
   extraReducers: (builder) => {
@@ -60,7 +58,24 @@ const stationSlice = createSlice({
       state.stations = action.payload;
     });
     builder.addCase(fetchSchedule.fulfilled, (state, action: PayloadAction<Schedule[]>) => {
+      console.log('Fetch Schedule Response:', action.payload);
       state.schedule = action.payload;
+
+      // Create filterDataStation from response
+      const uniqueDestinations = new Set<string>();
+      const filterDataStation = action.payload.reduce<{ destination: string; color: string }[]>((acc, schedule) => {
+        if (!uniqueDestinations.has(schedule.destination)) {
+          uniqueDestinations.add(schedule.destination);
+          acc.push({
+            destination: schedule.destination,
+            color: schedule.color,
+          });
+        }
+        return acc;
+      }, []);
+      
+      state.filterScheduleData = filterDataStation;
+      console.log('FILTER DATANYA:', filterDataStation);
     });
   },
 });
