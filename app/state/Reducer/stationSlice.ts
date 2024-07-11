@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// BATAS UNDO
 interface Station {
   id: string;
   name: string;
@@ -24,6 +23,7 @@ interface StationState {
   selectedStation: Station | null;
   schedule: Schedule[];
   filterScheduleData: { destination: string; color: string }[];
+  scheduleVisibility: boolean; // State for visibility
 }
 
 const initialState: StationState = {
@@ -31,15 +31,14 @@ const initialState: StationState = {
   selectedStation: null,
   schedule: [],
   filterScheduleData: [],
+  scheduleVisibility: true, // Initial state set to true
 };
 
-// FETCHING STATIONS
 export const fetchStations = createAsyncThunk('stations/fetchStations', async () => {
   const response = await axios.get('/api/v1/station');
   return response.data.data;
 });
 
-// FETCHING SCHEDULE WITH SELECTED ID
 export const fetchSchedule = createAsyncThunk('stations/fetchSchedule', async (stationId: string) => {
   const response = await axios.get(`/api/v1/schedule/${stationId}`);
   return response.data.data;
@@ -51,6 +50,12 @@ const stationSlice = createSlice({
   reducers: {
     selectStation: (state, action: PayloadAction<Station | null>) => {
       state.selectedStation = action.payload;
+      if (action.payload) {
+        fetchSchedule(action.payload.id);
+      }
+    },
+    toggleScheduleVisibility: (state) => {
+      state.scheduleVisibility = !state.scheduleVisibility;
     },
   },
   extraReducers: (builder) => {
@@ -58,27 +63,10 @@ const stationSlice = createSlice({
       state.stations = action.payload;
     });
     builder.addCase(fetchSchedule.fulfilled, (state, action: PayloadAction<Schedule[]>) => {
-      console.log('Fetch Schedule Response:', action.payload);
       state.schedule = action.payload;
-
-      // Create filterDataStation from response
-      const uniqueDestinations = new Set<string>();
-      const filterDataStation = action.payload.reduce<{ destination: string; color: string }[]>((acc, schedule) => {
-        if (!uniqueDestinations.has(schedule.destination)) {
-          uniqueDestinations.add(schedule.destination);
-          acc.push({
-            destination: schedule.destination,
-            color: schedule.color,
-          });
-        }
-        return acc;
-      }, []);
-      
-      state.filterScheduleData = filterDataStation;
-      console.log('FILTER DATANYA:', filterDataStation);
     });
   },
 });
 
-export const { selectStation } = stationSlice.actions;
+export const { selectStation, toggleScheduleVisibility } = stationSlice.actions;
 export default stationSlice.reducer;
