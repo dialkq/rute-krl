@@ -1,12 +1,12 @@
 "use client";
-//batas undo
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Select from "react-select";
 import { IoMdAdd } from "react-icons/io";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/app/state/store";
-import { fetchStations, selectStation } from "@/app/state/Reducer/stationSlice";
+import { selectStation, setStations } from "@/app/state/Reducer/stationSlice";
+import useStations from "@/app/hooks/useStation";
 import { useEffect } from "react";
 
 // STYLE SELECT OPTION
@@ -35,18 +35,20 @@ const customStyles = {
 
 export function AddStation() {
   const dispatch = useDispatch<AppDispatch>();
-  const stations = useSelector((state: RootState) => state.stations.stations);
+  const { data: stations, isLoading, error } = useStations();
   const selectedStation = useSelector((state: RootState) => state.stations.selectedStation);
 
   useEffect(() => {
-    dispatch(fetchStations());
-  }, [dispatch]);
+    if (stations) {
+      dispatch(setStations(stations));
+    }
+  }, [stations, dispatch]);
 
   // MAPING OPTIONS FOR SELECT
-  const stationOptions = stations.map((station: any) => ({
+  const stationOptions = stations?.map((station: any) => ({
     value: station.id,
     label: station.name,
-  }));
+  })) || [];
 
   // HANDLE SELECTED OPTION FOR STATE
   const handleChange = (option: any) => {
