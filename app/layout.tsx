@@ -6,8 +6,9 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "rute krl",
-  description: "",
+  title: "rute-krl",
+  description: "rute KRL commuline",
+  keywords: ["jadwal krl", "rute krl", "kai access"],
 };
 
 export default function RootLayout({
@@ -16,12 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-        <body className="dark:bg-stone-900">
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
+    <html lang="en">
+      <head>
+        <link rel="shortcut icon" href="/rute-krl.png" />
+      </head>
+      <body className="dark:bg-stone-900">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
