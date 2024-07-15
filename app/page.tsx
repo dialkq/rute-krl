@@ -14,10 +14,10 @@ export default function Home() {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <div className="w-11/12 md:w-3/5 lg:w-1/2 mx-auto">
-          <div className="">
+          <div className="sticky top-0 dark:bg-stone-900 bg-white">
             <Navbar />
           </div>
-          <div className="my-5 md:my-6 lg:my-7 ">
+          <div className="my-2 md:my-3 lg:my-4">
             <CardStation />
           </div>
           <div>

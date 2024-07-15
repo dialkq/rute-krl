@@ -32,7 +32,11 @@ const CardStation = () => {
 
   // HANDLE LOADING/ERROR
   if (isLoading) {
-    return <p className="w-full mx-auto text-center text-lg text-foreground/50 font-bold">Loading...</p>;
+    return (
+      <p className="w-full mx-auto text-center text-lg text-foreground/50 font-bold">
+        Loading...
+      </p>
+    );
   }
   if (error) {
     return (
@@ -183,9 +187,11 @@ const CardStation = () => {
   return (
     // NAMA STASIUN
     <div className="w-full border-b border-foreground/20 pb-3">
-      <div className="w-full flex justify-between my-auto mb-3">
-        <p className="text-foreground/80 font-bold text-xl lg:text-2xl capitalize">
-          {selectedStation ? selectedStation.name : "Pilih Stasiun"}
+      <div className="w-full flex justify-between my-auto mb-4 lg:mb-5 tracking-wider">
+        <p className="text-foreground/80 font-bold text-2xl lg:text-3xl capitalize">
+          {selectedStation
+            ? capitalizeFirstLetter(selectedStation.name)
+            : "Pilih Stasiun"}
         </p>
         {isMainVisible ? (
           <IoIosArrowUp
@@ -201,89 +207,88 @@ const CardStation = () => {
       </div>
 
       {/*  MAPING CARD STATION  */}
-{isMainVisible && (
-  hasSchedules ? (
-    availableDestinations.map((data, index) => {
-      const times = schedule
-        ?.filter((sch) => sch.destination === data?.destination)
-        .map((sch) => sch.timeEstimated.slice(0, 5)) ?? [];
-      const subsequentDepartures = getSubsequentDepartures(times, 1);
-      const minutesUntilDeparture = getMinutesUntilDeparture(times);
+      {isMainVisible &&
+        (hasSchedules ? (
+          availableDestinations.map((data, index) => {
+            const times =
+              schedule
+                ?.filter((sch) => sch.destination === data?.destination)
+                .map((sch) => sch.timeEstimated.slice(0, 5)) ?? [];
+            const subsequentDepartures = getSubsequentDepartures(times, 1);
+            const minutesUntilDeparture = getMinutesUntilDeparture(times);
 
-      const destination = data?.destination ?? "";
+            const destination = data?.destination ?? "";
 
-      return (
-        <div
-          key={index}
-          className={`w-full flex flex-col border-l-4 pb-3`}
-          style={{ borderColor: data?.color }}
-        >
-          {/* ARAH MENUJU */}
-          <div className="flex w-full justify-between">
-            <div className="pl-2 md:pl-3">
-              <p className="text-foreground/50 text-xs">Arah menuju</p>
-              <p className="text-lg md:text-xl font-semibold font-mono mt-1 text-foreground/90">
-                {capitalizeFirstLetter(destination)}
-              </p>
-            </div>
-            {/* JADWAL KEBERANGKATAN */}
-            <div className="flex flex-col">
-              <p className="text-foreground/50 text-xs text-end ">
-                Berangkat pukul
-              </p>
-              <p className="font-bold text-base md:text-lg font-mono tracking-widest text-end mt-1">
-                {getClosestDeparture(times)}
-              </p>
-              <p className="text-foreground/50 text-xs text-end">
-                {minutesUntilDeparture > 0
-                  ? formatTimeDifference(minutesUntilDeparture)
-                  : "sudah tiba"}
-              </p>
-            </div>
-          </div>
-
-          {/* SCHEDULE READY */}
-          <div className="flex flex-col w-full">
-            <div
-              className="w-full flex justify-between pt-3 pb-2 my-auto cursor-pointer"
-              onClick={() => toggleVisibility(destination)}
-            >
-              <p className="pl-2 md:pl-3 text-foreground/50 hover:underline text-xs transition-all ease-in-out">
-                Lihat jadwal tersedia
-              </p>
-              {visibleSchedules[destination] ? (
-                <IoIosArrowUp className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
-              ) : (
-                <IoIosArrowDown className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
-              )}
-            </div>
-            {/* SHOW ALL SCHEDULE */}
-            <div className="ml-2 md:ml-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 border-b pb-2 border-foreground/20">
-              {visibleSchedules[destination] &&
-                subsequentDepartures.map((time, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-foreground/10 rounded-md flex py-1 text-sm my-auto"
-                  >
-                    <p className="mx-auto font-semibold text-foreground/80 text-mono text-sm lg:text-base">
-                      {time}
+            return (
+              <div
+                key={index}
+                className={`w-full flex flex-col border-l-4 pb-3`}
+                style={{ borderColor: data?.color }}
+              >
+                {/* ARAH MENUJU */}
+                <div className="flex w-full justify-between">
+                  <div className="pl-2 md:pl-3">
+                    <p className="text-foreground/50 text-xs">Arah menuju</p>
+                    <p className="text-lg md:text-xl font-semibold font-mono mt-1 text-foreground/90">
+                      {capitalizeFirstLetter(destination)}
                     </p>
                   </div>
-                ))}
-            </div>
-          </div>
-        </div>
-      );
-    })
-  ) : (
-    <div className="w-full">
-      <p className="text-foreground/50 font-bold text-center mt-10">
-        Jadwal hari ini telah habis, kembali lagi besok
-      </p>
-    </div>
-  )
-)}
+                  {/* JADWAL KEBERANGKATAN */}
+                  <div className="flex flex-col">
+                    <p className="text-foreground/50 text-xs text-end ">
+                      Berangkat pukul
+                    </p>
+                    <p className="font-bold text-base md:text-lg font-mono tracking-widest text-end mt-1">
+                      {getClosestDeparture(times)}
+                    </p>
+                    <p className="text-foreground/50 text-xs text-end">
+                      {minutesUntilDeparture > 0
+                        ? formatTimeDifference(minutesUntilDeparture)
+                        : "sekarang"}
+                    </p>
+                  </div>
+                </div>
 
+                {/* SCHEDULE READY */}
+                <div className="flex flex-col w-full">
+                  <div
+                    className="w-full flex justify-between pt-3 pb-2 my-auto cursor-pointer"
+                    onClick={() => toggleVisibility(destination)}
+                  >
+                    <p className="pl-2 md:pl-3 text-foreground/50 hover:underline text-xs transition-all ease-in-out">
+                      Lihat jadwal tersedia
+                    </p>
+                    {visibleSchedules[destination] ? (
+                      <IoIosArrowUp className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
+                    ) : (
+                      <IoIosArrowDown className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
+                    )}
+                  </div>
+                  {/* SHOW ALL SCHEDULE */}
+                  <div className="ml-2 md:ml-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 border-b pb-2 border-foreground/20">
+                    {visibleSchedules[destination] &&
+                      subsequentDepartures.map((time, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-foreground/10 rounded-md flex py-1 text-sm my-auto"
+                        >
+                          <p className="mx-auto font-semibold text-foreground/80 text-mono text-sm lg:text-base">
+                            {time}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="w-full">
+            <p className="text-foreground/50 font-bold text-center mt-10">
+              Jadwal hari ini telah habis, kembali lagi besok
+            </p>
+          </div>
+        ))}
     </div>
   );
 };
