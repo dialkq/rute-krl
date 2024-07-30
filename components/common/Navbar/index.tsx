@@ -5,11 +5,11 @@ import { AddStation } from "../AddStation";
 
 const Navbar = () => {
   return (
-    <div className="flex w-full flex-col my-auto py-2">
+    <div className="flex w-full flex-col my-auto py-2" data-testid="navbar">
       <div className="flex w-full justify-between">
         {/* LOGO */}
         <div className="flex cursor-pointer group my-auto">
-          <SiTestrail className="text-xl text-foreground/40 my-auto mr-0.5 cursor-pointer group-hover:text-foreground/90" />
+          <SiTestrail data-testid="testrail-icon" className="text-xl text-foreground/40 my-auto mr-0.5 cursor-pointer group-hover:text-foreground/90" />
           <p className="lg:text-xl text-foreground/40 cursor-pointer text-center font-semibold font-mono group-hover:text-foreground/90">
             rute-krl
           </p>
