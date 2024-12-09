@@ -63,7 +63,7 @@ export function AddStation() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <IoMdAdd className="w-5 h-5 font-bold text-foreground/40 my-auto cursor-pointer hover:text-foreground/90" />
+        <IoMdAdd className="w-6 h-6 md:w-6 md:h-6 font-bold text-foreground/40 my-auto cursor-pointer hover:text-foreground/90" />
       </DialogTrigger>
       <DialogContent className="w-11/12 md:w-full dark:bg-black rounded-lg fixed left-[50%] top-[20%]">
         <DialogDescription>Pilih Stasiun</DialogDescription>
