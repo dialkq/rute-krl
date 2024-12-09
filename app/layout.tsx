@@ -6,8 +6,8 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "rute-krl",
-  description: "rute KRL commuline",
+  title: "rute-krl - Lihat Jadwal Dengan Mudah",
+  description: "rute-krl - Lihat Jadwal Dengan Mudah",
   keywords: ["jadwal krl", "rute krl", "kai access"],
 };
 
