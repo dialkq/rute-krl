@@ -59,6 +59,9 @@ const CardStation = () => {
     if (hours > 0) {
       return `${hours} jam ${remainingMinutes} menit lagi`;
     }
+    if (remainingMinutes === 0) {
+      return "Sekarang";
+    }
     return `${remainingMinutes} menit lagi`;
   };
 
