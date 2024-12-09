@@ -54,13 +54,11 @@ const CardStation = () => {
 
   const formatTimeDifference = (minutes: number): string => {
     if (minutes < 0) return "Telah Berangkat";
+    if (minutes === 0) return "Sekarang";
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     if (hours > 0) {
       return `${hours} jam ${remainingMinutes} menit lagi`;
-    }
-    if (remainingMinutes === 0) {
-      return "Sekarang";
     }
     return `${remainingMinutes} menit lagi`;
   };
