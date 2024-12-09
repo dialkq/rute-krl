@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 
-// CROSS ORIGIN FIX
+// Konfigurasi untuk menangani Cross-Origin Resource Sharing (CORS)
 const nextConfig = {
-    async rewrites() {
-      return [
-        {
-          source: '/api/:path*',
-          destination: 'https://www.api.comuline.com/:path*',
-        },
-      ];
-    },
-  };
-  
-  export default nextConfig;
+  async rewrites() {
+    return [
+      {
+        source: '/comuline-api/:path*',
+        destination: 'https://comuline-api.zulio.workers.dev/:path*', 
+      },
+    ];
+  },
+};
+
+export default nextConfig;

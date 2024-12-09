@@ -38,8 +38,10 @@ export function AddStation() {
   const { data: stations, isLoading, error } = useStations();
   const selectedStation = useSelector((state: RootState) => state.stations.selectedStation);
 
+  // Effect to set stations in Redux store and log data
   useEffect(() => {
     if (stations) {
+      console.log("Stations fetched:", stations); // Log fetched stations
       dispatch(setStations(stations));
     }
   }, [stations, dispatch]);
@@ -53,6 +55,7 @@ export function AddStation() {
   // HANDLE SELECTED OPTION FOR STATE
   const handleChange = (option: any) => {
     const selected = stations.find((station: any) => station.id === option.value);
+    console.log("Selected station:", selected);
     dispatch(selectStation(selected || null));
   };
 

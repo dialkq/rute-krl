@@ -1,287 +1,231 @@
+"use client";
+
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "@/app/state/store";
-import { useEffect, useState } from "react";
-import useStations from "@/app/hooks/useStation";
-import useSchedule from "@/app/hooks/usesSchedule";
-import { Schedule } from "@/app/types";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/state/store";
+import { Station } from "@/app/types";
+import stationNameMap from "@/components/common/CardStation/stationNameMap";
+import useSchedule from "@/app/hooks/useSchedule";
+import Loading from "./loading";
 
 const CardStation = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const selectedStation = useSelector(
-    (state: RootState) => state.stations.selectedStation
-  );
-  const { data: stations } = useStations();
-  const {
-    data: schedule,
-    isLoading,
-    error,
-  } = useSchedule(selectedStation ? selectedStation.id : "");
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [visibleSchedules, setVisibleSchedules] = useState<{
+  const [isMainVisible, setIsMainVisible] = useState(true);
+  const [scheduleVisibility, setScheduleVisibility] = useState<{
     [key: string]: boolean;
   }>({});
-  const [isMainVisible, setIsMainVisible] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  const selectedStation: Station | null = useSelector(
+    (state: RootState) => state.stations.selectedStation
+  );
+
+  const { schedule, loading } = useSchedule(selectedStation?.id || null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000);
-    return () => clearInterval(interval);
+    }, 60000); // Update every 1 minute
+    return () => clearInterval(timer);
   }, []);
 
-  // HANDLE LOADING/ERROR
-  if (isLoading) {
-    return (
-      <p className="w-full mx-auto text-center text-lg text-foreground/50 font-bold">
-        Loading...
-      </p>
-    );
-  }
-  if (error) {
-    return (
-      <p className="w-full mx-auto text-center text-lg text-foreground/50 font-bold">
-        Error showing schedule{" "}
-      </p>
-    );
-  }
-
-  // FORMAT TIME
-  const formatTime = (date: Date) => {
-    return date.toTimeString().slice(0, 5);
-  };
-
-  // PARSE TIME
-  const parseTime = (time: string) => {
-    const [hours, minutes] = time.split(":").map(Number);
-    const now = new Date();
-    const date = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      hours,
-      minutes
-    );
-    return date;
-  };
-
-  // GET CLOSEST DEPARTURE
-  const getClosestDeparture = (times: string[]) => {
-    const now = currentTime;
-    let closestTime: Date | null = null;
-    let minDiff = Infinity;
-
-    times.forEach((time) => {
-      const departureTime = parseTime(time);
-      const diff = (departureTime.getTime() - now.getTime()) / 60000;
-
-      if (diff >= 0 && diff < minDiff) {
-        closestTime = departureTime;
-        minDiff = diff;
-      }
-    });
-
-    return closestTime ? formatTime(closestTime) : "";
-  };
-
-  // GET MINUTES UNTIL DEPARTURE
-  const getMinutesUntilDeparture = (times: string[]) => {
-    const now = currentTime;
-    const diffs = times
-      .map((time) => {
-        const departureTime = parseTime(time);
-        const diff = (departureTime.getTime() - now.getTime()) / 60000;
-        return diff;
-      })
-      .filter((diff) => diff > 0);
-
-    return diffs.length > 0 ? Math.floor(Math.min(...diffs)) : 0;
-  };
-
-  // FORMAT TIME DIFFERENCE ON TEXT
-  const formatTimeDifference = (minutes: number) => {
-    if (minutes >= 60) {
-      const hours = Math.round(minutes / 60);
-      return `dalam ${hours} jam`;
+  const calculateTimeDifferenceInMinutes = (departsAt: string): number => {
+    if (!departsAt) return -1;
+    try {
+      const [date, time] = departsAt.split(" ");
+      const [hours, minutes] = time.split(":").map(Number);
+      const departureTotalMinutes = hours * 60 + minutes;
+      const currentHours = currentTime.getHours();
+      const currentMinutes = currentTime.getMinutes();
+      const currentTotalMinutes = currentHours * 60 + currentMinutes;
+      return departureTotalMinutes - currentTotalMinutes;
+    } catch (error) {
+      console.error("Error calculating time difference:", error);
+      return -1;
     }
-    return `dalam ${minutes} menit`;
   };
 
-  // GET SUBSEQUENT DEPARTURES
-  const getSubsequentDepartures = (times: string[], count: number) => {
-    const now = currentTime;
-    const diffs = times
-      .map((time) => {
-        const departureTime = parseTime(time);
-        const diff = (departureTime.getTime() - now.getTime()) / 60000;
-        return { time: formatTime(departureTime), diff };
-      })
-      .filter((obj) => obj.diff > 0)
-      .sort((a, b) => a.diff - b.diff);
-
-    return diffs.slice(count).map((obj) => obj.time);
+  const formatTime = (departsAt: string): string => {
+    if (!departsAt) return "";
+    const [date, time] = departsAt.split(" ");
+    const [hours, minutes] = time.split(":");
+    return `${hours}:${minutes}`;
   };
 
-  const toggleVisibility = (destination: string) => {
-    setVisibleSchedules((prevState) => ({
+  const formatTimeDifference = (minutes: number): string => {
+    if (minutes < 0) return "Telah Berangkat";
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (hours > 0) {
+      return `${hours} jam ${remainingMinutes} menit lagi`;
+    }
+    return `${remainingMinutes} menit lagi`;
+  };
+
+  const filteredSchedule = schedule.filter((item) => {
+    const currentHours = currentTime.getHours();
+    const currentMinutes = currentTime.getMinutes();
+    const [date, time] = item.departs_at.split(" ");
+    const [hours, minutes] = time.split(":").map(Number);
+    return (
+      hours > currentHours ||
+      (hours === currentHours && minutes >= currentMinutes)
+    );
+  });
+
+  const sortedSchedule = filteredSchedule.sort((a, b) => {
+    const [dateA, timeA] = a.departs_at.split(" ");
+    const [dateB, timeB] = b.departs_at.split(" ");
+    const [hoursA, minutesA] = timeA.split(":").map(Number);
+    const [hoursB, minutesB] = timeB.split(":").map(Number);
+    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
+  });
+
+  const uniqueStations = Array.from(
+    new Set(sortedSchedule.map((item) => item.station_destination_id))
+  )
+    .map((stationId) =>
+      sortedSchedule.find((item) => item.station_destination_id === stationId)
+    )
+    .filter((item): item is (typeof sortedSchedule)[number] => !!item);
+
+  const toggleScheduleVisibility = (stationId: string) => {
+    setScheduleVisibility((prevState) => ({
       ...prevState,
-      [destination]: !prevState[destination],
+      [stationId]: !prevState[stationId],
     }));
   };
 
-  const toggleMainVisibility = () => {
-    setIsMainVisible((prev) => !prev);
+  const formatStationName = (name: string): string => {
+    return name
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
-  // ONLY SHOW SCHEDULES THAT ARE HAVE THE DATA
-  const shouldRenderStationCard = (times: string[]) => {
-    const closestDeparture = getClosestDeparture(times);
-    return closestDeparture !== "";
-  };
-
-  // TEXT CAPITALIZE FIRST LETTER ONLY
-  const capitalizeFirstLetter = (text: string) => {
-    if (!text) return text;
-    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-  };
-
-  // CHECK IF THERE ARE AVAILABLE SCHEDULES
-  const hasAvailableSchedules = (schedules: Schedule[]) => {
-    return schedules.some(
-      (sch) => getMinutesUntilDeparture([sch.timeEstimated.slice(0, 5)]) > 0
+  const StationNameDisplay = ({
+    loading,
+    stationId,
+  }: {
+    loading: boolean;
+    stationId: string;
+  }) => {
+    return (
+      <p className="text-lg md:text-xl font-semibold font-mono mt-1 text-foreground/90">
+        {loading ? (
+          <Loading />
+        ) : stationNameMap[stationId] ? (
+          formatStationName(stationNameMap[stationId])
+        ) : (
+          "Tidak ada data"
+        )}
+      </p>
     );
   };
 
-  // UNIQUE DESTINATIONS
-  const uniqueDestinations = Array.from(
-    new Set(schedule?.map((sch: Schedule) => sch.destination))
-  )
-    .map((destination) => {
-      return schedule?.find((sch: Schedule) => sch.destination === destination);
-    })
-    .filter(Boolean)
-    .sort((a, b) => {
-      const aTimes =
-        schedule
-          ?.filter((sch: Schedule) => sch.destination === a?.destination)
-          .map((sch: Schedule) => sch.timeEstimated.slice(0, 5)) ?? [];
-      const bTimes =
-        schedule
-          ?.filter((sch: Schedule) => sch.destination === b?.destination)
-          .map((sch: Schedule) => sch.timeEstimated.slice(0, 5)) ?? [];
-      return (
-        getMinutesUntilDeparture(aTimes) - getMinutesUntilDeparture(bTimes)
-      );
-    });
-
-  const availableDestinations = uniqueDestinations.filter((data) => {
-    const times =
-      schedule
-        ?.filter((sch) => sch.destination === data?.destination)
-        .map((sch) => sch.timeEstimated.slice(0, 5)) ?? [];
-    return shouldRenderStationCard(times);
-  });
-
-  const hasSchedules = hasAvailableSchedules(schedule ?? []);
-
   return (
-    // NAMA STASIUN
     <div className="w-full border-b border-foreground/20 pb-3">
       <div className="w-full flex justify-between my-auto mb-4 lg:mb-5 tracking-wider">
         <p className="text-foreground/80 font-bold text-2xl lg:text-3xl capitalize">
           {selectedStation
-            ? capitalizeFirstLetter(selectedStation.name)
+            ? formatStationName(selectedStation.name)
             : "Pilih Stasiun"}
         </p>
         {isMainVisible ? (
           <IoIosArrowUp
             className="my-auto text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold"
-            onClick={toggleMainVisibility}
+            onClick={() => setIsMainVisible(false)}
           />
         ) : (
           <IoIosArrowDown
             className="my-auto text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold"
-            onClick={toggleMainVisibility}
+            onClick={() => setIsMainVisible(true)}
           />
         )}
       </div>
 
-      {/*  MAPING CARD STATION  */}
       {isMainVisible &&
-        (hasSchedules ? (
-          availableDestinations.map((data, index) => {
-            const times =
-              schedule
-                ?.filter((sch) => sch.destination === data?.destination)
-                .map((sch) => sch.timeEstimated.slice(0, 5)) ?? [];
-            const subsequentDepartures = getSubsequentDepartures(times, 1);
-            const minutesUntilDeparture = getMinutesUntilDeparture(times);
+        (uniqueStations.length > 0 ? (
+          <div className="space-y-0">
+            {uniqueStations.map((item, index) => {
+              const stationId = item.station_destination_id;
 
-            const destination = data?.destination ?? "";
+              const subsequentDepartures = sortedSchedule
+                .filter(
+                  (scheduleItem) =>
+                    scheduleItem.station_destination_id === stationId
+                )
+                .map((scheduleItem) => formatTime(scheduleItem.departs_at));
 
-            return (
-              <div
-                key={index}
-                className={`w-full flex flex-col border-l-4 pb-3`}
-                style={{ borderColor: data?.color }}
-              >
-                {/* ARAH MENUJU */}
-                <div className="flex w-full justify-between">
-                  <div className="pl-2 md:pl-3">
-                    <p className="text-foreground/50 text-xs">Arah menuju</p>
-                    <p className="text-lg md:text-xl font-semibold font-mono mt-1 text-foreground/90">
-                      {capitalizeFirstLetter(destination)}
-                    </p>
+              return (
+                <div
+                  key={index}
+                  className="w-full flex flex-col border-l-4 pb-3"
+                  style={{
+                    borderColor: item?.metadata.origin.color || "green",
+                  }}
+                >
+                  <div className="flex w-full justify-between">
+                    <div className="pl-2 md:pl-3">
+                      <p className="text-foreground/50 text-xs">Arah menuju</p>
+                      <StationNameDisplay
+                        loading={loading}
+                        stationId={stationId}
+                      />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <p className="text-foreground/50 text-xs text-end">
+                        Berangkat pukul
+                      </p>
+                      <p className="font-bold text-base md:text-lg font-mono tracking-widest text-end mt-1">
+                        {formatTime(item.departs_at)}
+                      </p>
+
+                      <p className="text-foreground/50 text-xs text-end">
+                        {formatTimeDifference(
+                          calculateTimeDifferenceInMinutes(item.departs_at)
+                        )}
+                      </p>
+                    </div>
                   </div>
-                  {/* JADWAL KEBERANGKATAN */}
-                  <div className="flex flex-col">
-                    <p className="text-foreground/50 text-xs text-end ">
-                      Berangkat pukul
-                    </p>
-                    <p className="font-bold text-base md:text-lg font-mono tracking-widest text-end mt-1">
-                      {getClosestDeparture(times)}
-                    </p>
-                    <p className="text-foreground/50 text-xs text-end">
-                      {minutesUntilDeparture > 0
-                        ? formatTimeDifference(minutesUntilDeparture)
-                        : "sekarang"}
-                    </p>
+
+                  <div className="flex flex-col w-full">
+                    <div
+                      className="w-full flex justify-between pt-3 pb-2 my-auto cursor-pointer"
+                      onClick={() =>
+                        toggleScheduleVisibility(item.station_destination_id)
+                      }
+                    >
+                      <p className="pl-2 md:pl-3 text-foreground/50 hover:underline text-xs transition-all ease-in-out ">
+                        Lihat jadwal tersedia
+                      </p>
+                      {scheduleVisibility[item.station_destination_id] ? (
+                        <IoIosArrowDown className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
+                      ) : (
+                        <IoIosArrowUp className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
+                      )}
+                    </div>
+
+                    <div className="ml-2 md:ml-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 border-b pb-3 border-foreground/20 my-2">
+                      {scheduleVisibility[stationId] &&
+                        subsequentDepartures.map((time, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-foreground/10 rounded-md flex py-1 text-sm my-auto"
+                          >
+                            <p className="mx-auto font-semibold text-foreground/80 text-mono text-sm lg:text-base">
+                              {time}
+                            </p>
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 </div>
-
-                {/* SCHEDULE READY */}
-                <div className="flex flex-col w-full">
-                  <div
-                    className="w-full flex justify-between pt-3 pb-2 my-auto cursor-pointer"
-                    onClick={() => toggleVisibility(destination)}
-                  >
-                    <p className="pl-2 md:pl-3 text-foreground/50 hover:underline text-xs transition-all ease-in-out">
-                      Lihat jadwal tersedia
-                    </p>
-                    {visibleSchedules[destination] ? (
-                      <IoIosArrowUp className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
-                    ) : (
-                      <IoIosArrowDown className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
-                    )}
-                  </div>
-                  {/* SHOW ALL SCHEDULE */}
-                  <div className="ml-2 md:ml-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 border-b pb-2 border-foreground/20">
-                    {visibleSchedules[destination] &&
-                      subsequentDepartures.map((time, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-foreground/10 rounded-md flex py-1 text-sm my-auto"
-                        >
-                          <p className="mx-auto font-semibold text-foreground/80 text-mono text-sm lg:text-base">
-                            {time}
-                          </p>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })
+              );
+            })}
+          </div>
         ) : (
           <div className="w-full">
             <p className="text-foreground/50 font-bold text-center mt-10">
