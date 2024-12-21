@@ -169,7 +169,9 @@ const CardStation = () => {
                 >
                   <div className="flex w-full justify-between">
                     <div className="pl-2 md:pl-3">
-                      <p className="text-foreground/50 text-xs">Arah menuju</p>
+                      <p className="text-foreground/50 text-xs font-mono tracking-tight">
+                        Arah menuju
+                      </p>
                       <StationNameDisplay
                         loading={loading}
                         stationId={stationId}
@@ -177,14 +179,14 @@ const CardStation = () => {
                     </div>
 
                     <div className="flex flex-col">
-                      <p className="text-foreground/50 text-xs text-end">
+                      <p className="text-foreground/50 text-xs text-end font-mono">
                         Berangkat pukul
                       </p>
                       <p className="font-bold text-base md:text-lg font-mono tracking-widest text-end mt-1">
                         {formatTime(item.departs_at)}
                       </p>
 
-                      <p className="text-foreground/50 text-xs text-end">
+                      <p className="text-foreground/50 text-xs text-end font-mono">
                         {formatTimeDifference(
                           calculateTimeDifferenceInMinutes(item.departs_at)
                         )}
@@ -192,15 +194,16 @@ const CardStation = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col w-full">
+                  {/* SHOW ALL SCHEDULE */}
+                  <div className="flex flex-col w-full my-3">
                     <div
-                      className="w-full flex justify-between pt-3 pb-2 my-auto cursor-pointer"
+                      className="w-full flex justify-between my-auto cursor-pointer"
                       onClick={() =>
                         toggleScheduleVisibility(item.station_destination_id)
                       }
                     >
-                      <p className="pl-2 md:pl-3 text-foreground/50 hover:underline text-xs transition-all ease-in-out ">
-                        Lihat jadwal tersedia
+                      <p className="font-mono ml-2 md:ml-3 text-foreground/50 hover:underline hover:text-foreground/100 text-xs transition-all ease-in-out tracking-tight">
+                        Lihat jadwal berikutnya:
                       </p>
                       {scheduleVisibility[item.station_destination_id] ? (
                         <IoIosArrowDown className="my-auto text-xs text-foreground/50 hover:text-foreground/100 cursor-pointer font-bold" />
@@ -209,18 +212,23 @@ const CardStation = () => {
                       )}
                     </div>
 
-                    <div className="ml-2 md:ml-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 border-b pb-3 border-foreground/20 my-2">
+                    <div className="ml-2 md:ml-3 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 border-b border-foreground/20 py-1.5 md:py-2 mb-1.5 md:mb-2 font-mono">
                       {scheduleVisibility[stationId] &&
-                        subsequentDepartures.map((time, idx) => (
-                          <div
-                            key={idx}
-                            className="bg-foreground/10 rounded-md flex py-1 text-sm my-auto"
-                          >
-                            <p className="mx-auto font-semibold text-foreground/80 text-mono text-sm lg:text-base">
-                              {time}
-                            </p>
-                          </div>
-                        ))}
+                        subsequentDepartures.slice(1).map(
+                          (
+                            time,
+                            idx // Mulai dari data ke-2
+                          ) => (
+                            <div
+                              key={idx}
+                              className="bg-foreground/10 rounded-md flex py-1 text-sm my-auto"
+                            >
+                              <p className="mx-auto font-semibold text-foreground/80 text-mono text-sm lg:text-base">
+                                {time}
+                              </p>
+                            </div>
+                          )
+                        )}
                     </div>
                   </div>
                 </div>
