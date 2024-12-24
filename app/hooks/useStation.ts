@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 
 const fetchStations = async () => {
-  const response = await axios.get("/comuline-api/v1/station");
+  const response = await axios.get("/api/station");
   const stations = response.data.data;
 
   // Sort stations by name (ascending order)

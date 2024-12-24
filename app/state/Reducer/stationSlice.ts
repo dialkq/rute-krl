@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface Station {
   id: string;
   name: string;
+  group_wil: number;
+  fg_enable: number;
 }
 
 interface StationState {
@@ -13,8 +15,10 @@ interface StationState {
 const initialState: StationState = {
   stations: [],
   selectedStation: {
-    id: 'BOO',
-    name: "Bogor"
+    id: 'MRI',
+    name: "MANGGARAI",
+    group_wil: 0,
+    fg_enable: 0
   },
 };
 

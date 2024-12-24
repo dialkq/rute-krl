@@ -1,28 +1,24 @@
 export interface Station {
   id: string;
   name: string;
+  group_wil: number;
+  fg_enable: number;
 }
 
 export interface Schedule {
-  id: string;
-  station_id: string; // Menjaga konsistensi dengan API
-  station_origin_id: string;
-  station_destination_id: string;
   train_id: string;
-  line: string;
-  route: string;
-  departs_at: string; // Sesuai dengan API (departs_at)
-  arrives_at: string; // Sesuai dengan API (arrives_at)
-  metadata: {
-    origin: {
-      color: string;
-    };
-  };
-  created_at: string; // Sesuai dengan API (created_at)
-  updated_at: string; // Sesuai dengan API (updated_at)
+  ka_name: string;
+  route_name: string;
+  dest: string;
+  time_est: string;
+  color: string;
+  dest_time: string;
 }
+
 
 export interface StationDetails {
   id: string;
   name: string;
+  group_wil: number;
+  fg_enable: number;
 }
