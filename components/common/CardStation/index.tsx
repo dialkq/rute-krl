@@ -127,7 +127,7 @@ const CardStation = () => {
 
       {isMainVisible &&
         (uniqueStations.length > 0 ? (
-          <div className="space-y-0">
+          <>
             {uniqueStations.map((item, index) => {
               const dest = item.dest;
 
@@ -205,7 +205,7 @@ const CardStation = () => {
                 </div>
               );
             })}
-          </div>
+          </>
         ) : (
           <div className="w-full">
             <p className="text-foreground/50 font-bold text-center mt-10">
