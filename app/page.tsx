@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <div className="w-11/12 md:w-3/5 lg:w-1/2 mx-auto">
+        <div className="w-11/12 md:w-3/5 lg:w-2/5 mx-auto">
           <div className="sticky top-0 dark:bg-stone-900 bg-white">
             <Navbar />
           </div>

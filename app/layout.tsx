@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="shortcut icon" href="/rute-krl.png" />
+        <link rel="shortcut icon" href="/fav-icon.png" />
       </head>
       <body className="dark:bg-stone-900">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

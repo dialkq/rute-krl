@@ -1,0 +1,122 @@
+import { NextResponse } from "next/server";
+
+const NMO = [
+  {
+    train_id: "1501C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "05:10:00",
+    color: "#E30A16",
+    dest_time: "06:36:00",
+  },
+  {
+    train_id: "1503C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "06:10:00",
+    color: "#E30A16",
+    dest_time: "07:36:00",
+  },
+  {
+    train_id: "1505C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "07:05:00",
+    color: "#E30A16",
+    dest_time: "08:30:00",
+  },
+  {
+    train_id: "1507C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "08:35:00",
+    color: "#E30A16",
+    dest_time: "10:02:00",
+  },
+  {
+    train_id: "1509C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "10:21:00",
+    color: "#E30A16",
+    dest_time: "11:44:00",
+  },
+  {
+    train_id: "1511C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "12:00:00",
+    color: "#E30A16",
+    dest_time: "13:24:00",
+  },
+  {
+    train_id: "1513C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "13:35:00",
+    color: "#E30A16",
+    dest_time: "14:59:00",
+  },
+  {
+    train_id: "1515C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "15:15:00",
+    color: "#E30A16",
+    dest_time: "16:42:00",
+  },
+  {
+    train_id: "1517C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "17:10:00",
+    color: "#E30A16",
+    dest_time: "18:35:00",
+  },
+  {
+    train_id: "1519C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "18:40:00",
+    color: "#E30A16",
+    dest_time: "20:05:00",
+  },
+  {
+    train_id: "1521C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "20:30:00",
+    color: "#E30A16",
+    dest_time: "21:54:00",
+  },
+  {
+    train_id: "1523C",
+    ka_name: "COMMUTER LINE BOGOR",
+    route_name: "NAMBO-JAKARTAKOTA",
+    dest: "JAKARTAKOTA",
+    time_est: "22:05:00",
+    color: "#E30A16",
+    dest_time: "23:29:00",
+  },
+];
+
+export async function GET() {
+  const response = {
+    status: 200,
+    message: "Success",
+    data: NMO,
+  };
+
+  return NextResponse.json(response); // Mengembalikan respons JSON
+}

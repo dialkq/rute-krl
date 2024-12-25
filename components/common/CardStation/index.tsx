@@ -209,7 +209,7 @@ const CardStation = () => {
         ) : (
           <div className="w-full">
             <p className="text-foreground/50 font-bold text-center mt-10">
-              Jadwal hari ini telah habis, kembali lagi besok
+              Memuat stasiun...
             </p>
           </div>
         ))}
