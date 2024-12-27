@@ -20,9 +20,9 @@ export default function Home() {
           <div className="my-3 md:my-4 lg:my-5">
             <CardStation />
           </div>
-          <div>
+          <>
             <Footer />
-          </div>
+          </>
         </div>
       </Provider>
     </QueryClientProvider>
