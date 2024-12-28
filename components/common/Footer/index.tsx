@@ -3,11 +3,11 @@ import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="flex-col items-center my-10">
-      <p className="font-mono text-center text-foreground/50 text-xs lg:text-sm">
+    <>
+      <p className="w-11/12 mx-auto font-mono text-center text-foreground/50 text-xs lg:text-sm mt-10">
         Public transportation data must be easily accessible to public
       </p>
-      <div className="flex mx-auto justify-center my-5 space-x-5">
+      <div className="flex mx-auto justify-center my-5 space-x-5 mb-10">
         <a
           href="https://github.com/dialkq/rute-krl"
           target="_blank"
@@ -29,7 +29,7 @@ const Footer = () => {
           />
         </a>
       </div>
-    </div>
+    </>
   );
 };
 
