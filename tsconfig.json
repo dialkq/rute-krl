@@ -39,7 +39,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "jest.config.ts"
-, "components/common/CardStation/backup"  ],
+, "components/common/CardStation/backup", "next-sitemap.config.js"  ],
   "exclude": [
     "node_modules"
   ]

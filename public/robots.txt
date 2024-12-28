@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://rute-krl.vercel.app/
+
+# Sitemaps
+Sitemap: https://rute-krl.vercel.app/sitemap.xml
