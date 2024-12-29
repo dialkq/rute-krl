@@ -17,7 +17,7 @@ export default function Home() {
           <div className="sticky top-0 dark:bg-stone-900 bg-white">
             <Navbar />
           </div>
-          <div className="my-3 md:my-4 lg:my-5">
+          <div className="w-full my-3 md:my-4 lg:my-5">
             <CardStation />
           </div>
           <>

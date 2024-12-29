@@ -22,7 +22,10 @@ const CardStation = () => {
   const [scheduleVisibility, setScheduleVisibility] = useState<{
     [key: string]: boolean;
   }>({});
+
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showMessage, setShowMessage] = useState(false); // State to control the "yuk nanti lagi" message
+  const [timePassed, setTimePassed] = useState(false); // State to track if 5 seconds passed
 
   const selectedStation: Station | null = useSelector(
     (state: RootState) => state.stations.selectedStation
@@ -35,6 +38,15 @@ const CardStation = () => {
       setCurrentTime(new Date());
     }, 60000); // Update every 1 minute
     return () => clearInterval(timer);
+  }, []);
+
+  // Set a timeout to show the "yuk nanti lagi" message after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimePassed(true); // Set timePassed to true after 5 seconds
+    }, 5000); // 5000ms = 5 seconds
+
+    return () => clearTimeout(timer); // Clear the timer when the component unmounts or re-renders
   }, []);
 
   const calculateTimeDifferenceInMinutes = (timeEst: string): number => {
@@ -208,9 +220,15 @@ const CardStation = () => {
           </>
         ) : (
           <div className="w-full">
-            <p className="text-foreground/50 font-bold text-center mt-10">
-              Memuat stasiun...
-            </p>
+            {timePassed ? (
+              <p className="text-foreground/50 font-bold text-center mt-10">
+                Jadwal habis, lihat lagi secara berkala
+              </p>
+            ) : (
+              <p className="text-foreground/50 font-bold text-center mt-10">
+                Memuat Stasiun...
+              </p>
+            )}
           </div>
         ))}
     </div>
