@@ -8,7 +8,7 @@ const Footer = () => {
         Public transportation data must be easily accessible to public
       </p>
       <div className="flex mx-auto justify-center my-5 space-x-5 mb-10">
-        <a
+        {/* <a
           href="https://github.com/dialkq/rute-krl"
           target="_blank"
           rel="noopener noreferrer"
@@ -17,7 +17,7 @@ const Footer = () => {
             className="text-foreground/50 hover:text-foreground/100 cursor-pointer w-5 h-5"
             aria-label="GitHub"
           />
-        </a>
+        </a> */}
         <a
           href="https://www.linkedin.com/in/dialkq/"
           target="_blank"
